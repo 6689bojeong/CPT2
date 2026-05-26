@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>충피티 - 충북대학교 AI 챗봇</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="app-wrapper">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-area">
+          <div class="logo-icon">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="22" fill="#8B1A2B"/>
+              <text x="24" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold" font-family="sans-serif">충</text>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <span class="logo-main">충피티</span>
+            <span class="logo-sub">ChungPTI</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle" id="sidebarClose" aria-label="닫기">✕</button>
+      </div>
+
+      <button class="new-chat-btn" id="newChatBtn">
+        <span class="btn-icon">＋</span>
+        새 대화 시작
+      </button>
+
+      <nav class="sidebar-nav">
+        <p class="nav-label">빠른 질문</p>
+        <button class="quick-btn" data-msg="충북대학교 입학 전형은 어떻게 되나요?">📋 입학 안내</button>
+        <button class="quick-btn" data-msg="충북대학교 장학금 종류와 신청 방법을 알려주세요.">💰 장학금 정보</button>
+        <button class="quick-btn" data-msg="충북대학교 기숙사 신청 방법을 알려주세요.">🏠 기숙사 안내</button>
+        <button class="quick-btn" data-msg="충북대학교 주요 학과와 단과대학을 소개해주세요.">📚 학과 안내</button>
+        <button class="quick-btn" data-msg="충북대학교 캠퍼스 내 편의시설을 알려주세요.">🏫 캠퍼스 생활</button>
+        <button class="quick-btn" data-msg="충북대학교 취업 지원 서비스를 알려주세요.">💼 취업 지원</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="cbnu-info">
+          <span>충북대학교</span>
+          <span>Chungbuk National University</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="main-content">
+
+      <!-- Top Header -->
+      <header class="chat-header">
+        <button class="sidebar-open-btn" id="sidebarOpen" aria-label="메뉴">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="header-center">
+          <span class="header-title">충피티</span>
+          <span class="header-badge">충북대학교 AI</span>
+        </div>
+        <div class="header-status">
+          <span class="status-dot"></span>
+          <span>온라인</span>
+        </div>
+      </header>
+
+      <!-- Chat Messages -->
+      <section class="chat-area" id="chatArea">
+        <div class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-logo">
+            <div class="big-logo-icon">
+              <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="40" cy="40" r="38" fill="#8B1A2B"/>
+                <circle cx="40" cy="40" r="34" fill="white" fill-opacity="0.08"/>
+                <text x="40" y="52" text-anchor="middle" fill="white" font-size="32" font-weight="bold" font-family="'Noto Sans KR', sans-serif">충</text>
+              </svg>
+            </div>
+            <h1 class="welcome-title">충피티에 오신 것을 환영합니다!</h1>
+            <p class="welcome-subtitle">충북대학교 전용 AI 어시스턴트입니다.<br />학교 생활에 필요한 모든 것을 도와드립니다.</p>
+          </div>
+
+          <div class="suggestion-grid">
+            <button class="suggestion-card" data-msg="충북대학교에 대해 소개해주세요.">
+              <span class="card-icon">🎓</span>
+              <span class="card-title">학교 소개</span>
+              <span class="card-desc">충북대학교의 역사와 특징</span>
+            </button>
+            <button class="suggestion-card" data-msg="충북대학교 입학 전형은 어떻게 되나요?">
+              <span class="card-icon">📝</span>
+              <span class="card-title">입학 정보</span>
+              <span class="card-desc">수시 / 정시 전형 안내</span>
+            </button>
+            <button class="suggestion-card" data-msg="충북대학교 학생이 누릴 수 있는 혜택을 알려주세요.">
+              <span class="card-icon">⭐</span>
+              <span class="card-title">학생 혜택</span>
+              <span class="card-desc">장학금, 복지, 지원제도</span>
+            </button>
+            <button class="suggestion-card" data-msg="충북대학교 근처 맛집이나 카페를 추천해주세요.">
+              <span class="card-icon">🍜</span>
+              <span class="card-title">주변 정보</span>
+              <span class="card-desc">맛집, 카페, 편의시설</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="messages-container" id="messagesContainer"></div>
+      </section>
+
+      <!-- Input Area -->
+      <footer class="input-area">
+        <div class="input-wrapper">
+          <textarea
+            id="messageInput"
+            class="message-input"
+            placeholder="충북대학교에 대해 무엇이든 물어보세요..."
+            rows="1"
+            maxlength="2000"
+          ></textarea>
+          <button class="send-btn" id="sendBtn" aria-label="전송" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+        <p class="input-notice">충피티는 실수를 할 수 있습니다. 중요한 정보는 공식 웹사이트에서 확인하세요.</p>
+      </footer>
+
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
