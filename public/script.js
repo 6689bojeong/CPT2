@@ -231,6 +231,15 @@ function appendMessage(role, text, isError = false, sources = []) {
   });
 }
 
+// ======== 충피티 랜덤 팩트 ========
+const chungFacts = [
+  '우왕이는 언제나 스무살이에요!',
+];
+
+function getRandomFact() {
+  return chungFacts[Math.floor(Math.random() * chungFacts.length)];
+}
+
 // ======== Typing indicator ========
 function appendTypingIndicator() {
   const group = document.createElement('div');
@@ -259,7 +268,12 @@ function appendTypingIndicator() {
     indicator.appendChild(dot);
   }
 
+  const factEl = document.createElement('div');
+  factEl.className = 'typing-fact';
+  factEl.textContent = '💡 ' + getRandomFact();
+
   bubble.appendChild(indicator);
+  bubble.appendChild(factEl);
   bubbleWrapper.appendChild(bubble);
   group.appendChild(avatar);
   group.appendChild(bubbleWrapper);
