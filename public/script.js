@@ -195,8 +195,19 @@ feedbackForm?.addEventListener('submit', async (e) => {
   feedbackSubmitBtn.disabled = true;
   feedbackSubmitBtn.textContent = '전송 중...';
 
-  // TODO: Supabase 연결 후 실제 저장 로직으로 교체
-  await new Promise(r => setTimeout(r, 600));
+  try {
+    const res = await fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: text, sessionId }),
+    });
+    if (!res.ok) throw new Error();
+  } catch {
+    alert('전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+    feedbackSubmitBtn.disabled = false;
+    feedbackSubmitBtn.textContent = '보내기';
+    return;
+  }
 
   feedbackForm.style.display = 'none';
   feedbackSuccess.style.display = 'block';
