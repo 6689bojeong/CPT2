@@ -52,18 +52,11 @@
       <!-- 사이드바 광고 -->
       <div class="sidebar-ad">
         <span class="ad-label">AD</span>
-        <a class="ad-item" href="#" target="_blank" rel="noopener noreferrer">
+        <a class="ad-item" href="https://www.instagram.com/p/DYzH_0pk_Za/" target="_blank" rel="noopener noreferrer">
           <span class="ad-item-icon">📢</span>
           <div class="ad-item-text">
-            <span class="ad-item-title">충북대 소식</span>
-            <span class="ad-item-desc">2025 학생 창업 경진대회 접수 중 →</span>
-          </div>
-        </a>
-        <a class="ad-item" href="#" target="_blank" rel="noopener noreferrer">
-          <span class="ad-item-icon">☕</span>
-          <div class="ad-item-text">
-            <span class="ad-item-title">중문 카페</span>
-            <span class="ad-item-desc">학생증 제시 시 음료 10% 할인</span>
+            <span class="ad-item-title">경영정보학과 경정의 날!</span>
+            <span class="ad-item-desc">일시 : 6/2(화) 18:30 ~ 20:00</span>
           </div>
         </a>
       </div>
@@ -84,7 +77,7 @@
         <button class="sidebar-open-btn" id="sidebarOpen" aria-label="메뉴">
           <span></span><span></span><span></span>
         </button>
-        <div class="header-center">
+        <div class="header-center" id="homeBtn" role="button" aria-label="처음으로">
           <img src="충북대%20로고.png" alt="충북대 로고" class="header-cbnu-logo">
           <span class="header-title">충피티</span>
           <span class="header-badge">충북대학교 AI</span>
@@ -105,44 +98,67 @@
 
           <!-- 웰컴 광고 배너 -->
           <div class="welcome-ad">
-            <a class="welcome-ad-item" href="#" target="_blank" rel="noopener noreferrer">
+            <span class="welcome-ad-label">AD</span>
+            <a class="welcome-ad-item" href="https://www.instagram.com/p/DYzH_0pk_Za/" target="_blank" rel="noopener noreferrer">
               <span>📢</span>
               <div class="welcome-ad-text">
-                <strong>충북대 소식</strong>
-                <span>2025 학생 창업 경진대회 접수 중 →</span>
-              </div>
-            </a>
-            <div class="welcome-ad-divider"></div>
-            <a class="welcome-ad-item" href="#" target="_blank" rel="noopener noreferrer">
-              <span>☕</span>
-              <div class="welcome-ad-text">
-                <strong>중문 카페</strong>
-                <span>학생증 제시 시 음료 10% 할인</span>
+                <strong>경영정보학과 경정의 날!</strong>
+                <span>일시 : 6/2(화) 18:30 ~ 20:00</span>
               </div>
             </a>
           </div>
 
-          <div class="suggestion-grid">
-            <button class="suggestion-card" data-msg="충북대학교에 대해 소개해주세요.">
-              <span class="card-icon">🎓</span>
-              <span class="card-title">학교 소개</span>
-              <span class="card-desc">충북대학교의 역사와 특징</span>
-            </button>
-            <button class="suggestion-card" data-msg="충북대학교 입학 전형은 어떻게 되나요?">
-              <span class="card-icon">📝</span>
-              <span class="card-title">입학 정보</span>
-              <span class="card-desc">수시 / 정시 전형 안내</span>
-            </button>
-            <button class="suggestion-card" data-msg="충북대학교 학생이 누릴 수 있는 혜택을 알려주세요.">
-              <span class="card-icon">⭐</span>
-              <span class="card-title">학생 혜택</span>
-              <span class="card-desc">장학금, 복지, 지원제도</span>
-            </button>
-            <button class="suggestion-card" data-msg="충북대학교 근처 맛집이나 카페를 추천해주세요.">
-              <span class="card-icon">🍜</span>
-              <span class="card-title">주변 정보</span>
-              <span class="card-desc">맛집, 카페, 편의시설</span>
-            </button>
+          <div class="quick-menu">
+            <div class="quick-menu-viewport">
+              <div class="quick-menu-page active" id="qmPage0">
+                <div class="quick-menu-grid">
+                  <button class="quick-menu-btn" data-key="chatbot-intro">
+                    <span class="qm-icon">🤖</span>
+                    <span class="qm-label">챗봇소개</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="academic-calendar">
+                    <span class="qm-icon">📅</span>
+                    <span class="qm-label">학사일정</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="cafeteria">
+                    <span class="qm-icon">🍽️</span>
+                    <span class="qm-label">학식</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="contact">
+                    <span class="qm-icon">📞</span>
+                    <span class="qm-label">교내 연락처</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="tuition">
+                    <span class="qm-icon">💳</span>
+                    <span class="qm-label">등록금</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="scholarship">
+                    <span class="qm-icon">🎓</span>
+                    <span class="qm-label">장학금</span>
+                  </button>
+                </div>
+              </div>
+              <div class="quick-menu-page" id="qmPage1">
+                <div class="quick-menu-grid">
+                  <button class="quick-menu-btn" data-key="graduation">
+                    <span class="qm-icon">🏫</span>
+                    <span class="qm-label">졸업</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="email">
+                    <span class="qm-icon">📧</span>
+                    <span class="qm-label">교내이메일</span>
+                  </button>
+                  <button class="quick-menu-btn" data-key="wifi">
+                    <span class="qm-icon">📶</span>
+                    <span class="qm-label">와이파이</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="quick-menu-dots">
+              <button class="qm-dot active" data-page="0"></button>
+              <button class="qm-dot" data-page="1"></button>
+            </div>
           </div>
         </div>
 

@@ -282,6 +282,14 @@ html, body {
   display: flex;
   align-items: center;
   gap: 10px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  transition: background 0.2s;
+}
+
+.header-center:hover {
+  background: var(--wine-pale);
 }
 
 .header-cbnu-logo {
@@ -352,10 +360,8 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  padding: 40px 20px;
-  gap: 40px;
+  padding: 40px 20px 32px;
+  gap: 32px;
 }
 
 .welcome-logo {
@@ -390,49 +396,99 @@ html, body {
   line-height: 1.7;
 }
 
-.suggestion-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+/* ========= 빠른 메뉴 ========= */
+.quick-menu {
   width: 100%;
   max-width: 640px;
 }
 
-.suggestion-card {
+.quick-menu-viewport {
+  width: 100%;
+  min-height: 200px;
+}
+
+.quick-menu-page {
+  display: none;
+}
+
+.quick-menu-page.active {
+  display: block;
+  animation: qm-fade 0.22s ease;
+}
+
+@keyframes qm-fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.quick-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.quick-menu-btn {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 16px 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px 8px;
   background: var(--bg-secondary);
   border: 1.5px solid var(--border-color);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s;
-  text-align: left;
   font-family: inherit;
+  min-height: 80px;
 }
 
-.suggestion-card:hover {
+.quick-menu-btn:hover {
   border-color: var(--wine-accent);
   box-shadow: 0 4px 12px rgba(139,26,43,0.14);
   transform: translateY(-2px);
+  background: var(--wine-pale);
 }
 
-.card-icon {
-  font-size: 22px;
-  margin-bottom: 4px;
+.quick-menu-btn:active {
+  transform: translateY(0) scale(0.97);
 }
 
-.card-title {
-  font-size: 14px;
+.qm-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.qm-label {
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
+  text-align: center;
+  word-break: keep-all;
 }
 
-.card-desc {
-  font-size: 12.5px;
-  color: var(--text-secondary);
+.quick-menu-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.qm-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-color);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
+
+.qm-dot.active {
+  background: var(--wine);
+  transform: scale(1.25);
 }
 
 /* ========= Messages ========= */
@@ -959,6 +1015,17 @@ html, body {
   width: 100%;
   max-width: 640px;
   overflow: hidden;
+  position: relative;
+}
+
+.welcome-ad-label {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
 }
 
 .welcome-ad-item {
@@ -1007,9 +1074,8 @@ html, body {
 
 /* ========= Responsive ========= */
 @media (max-width: 768px) {
-  .suggestion-grid {
-    grid-template-columns: 1fr;
-    max-width: 100%;
+  .quick-menu-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .message-bubble-wrapper {
