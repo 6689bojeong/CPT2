@@ -23,7 +23,7 @@ try {
     validPairs.map(q => `Q: ${q.question}\nA: ${q.answer}`).join('\n\n');
 } catch {}
 
-const SYSTEM_PROMPT = `당신은 충북대학교 공식 안내 챗봇 **충피티(ChungPT)**입니다.
+const SYSTEM_PROMPT = `당신은 충북대학교 안내 챗봇 **충피티(ChungPT)**입니다.
 
 ---
 
@@ -152,7 +152,7 @@ app.post('/api/chat', async (req, res) => {
       const noticeList = notices.map(n =>
         `제목: ${n.title}\n카테고리: ${n.category}${n.date ? ' | 날짜: ' + n.date : ''}\n내용: ${(n.content || '').slice(0, 300)}\n출처: ${n.url}`
       ).join('\n\n');
-      noticeContext = `\n\n## 충북대 공지사항 데이터베이스 검색 결과\n아래 공지를 우선적으로 참고하여 답변하세요.\n\n${noticeList}`;
+      noticeContext = `\n\n[충북대 공지사항 DB 검색 결과 - 아래 공지를 우선 참고하여 답변하세요]\n\n${noticeList}`;
     }
 
     const fullPrompt = SYSTEM_PROMPT + qaContext + noticeContext +
