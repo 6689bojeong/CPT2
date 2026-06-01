@@ -621,6 +621,7 @@ html, body {
   padding: 6px 16px 12px;
   border-top: 1px solid var(--border-color);
   animation: fact-fade 0.4s ease;
+  transition: opacity 0.3s ease;
 }
 
 @keyframes fact-fade {

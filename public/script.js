@@ -333,11 +333,33 @@ function appendMessage(role, text, isError = false, sources = []) {
 
 // ======== 충피티 랜덤 팩트 ========
 const chungFacts = [
-  '우왕이는 언제나 스무살이에요!',
+  '우왕이는 언제나 20살이에요 🎂',
+  '중앙도서관 앞에서 산책하는 리트리버 감자를 만날 수 있어요 🦮',
+  '우왕이는 소들의 왕이에요 👑',
+  '충북대학교의 교목은 느티나무에요 🌳',
+  '충북대학교의 마스코트는 우왕이, 좌왕이, 스테디, 타나, 느루, 은송이 총 6종이에요! 🐾',
+  '충북대학교 수의대에는 진짜 소가 살고 있답니다 🐮',
+  '우리 학교 기숙사는 통금이 없어서 밤늦게까지 자유로워요 ✨',
+  '외국인 학생 비율이 무려 국립대 1위인 글로벌한 학교예요 🗺️',
+  '솔못에는 자라가 살고 있어요! 비 오는 날 눈여겨봐요 🐢',
+  '행복담길 나무 위를 잘 보면 가끔 청솔모가 놀고 있어요 🐿️',
+  '양성재와 농대 쪽에서는 가끔 고라니가 출몰하곤 해요 🦌',
+  '농구장과 제2학생회관 사이 언덕은 오를 때 목이 말라서 \'목마르뜨\'라고 불러요 💦',
+  '바보계단에서 넘어지면 3년간 연애를 못 한다는 무시무시한 속설이 있어요 😮',
+  '바보계단은 오르는 모습이 바보 같아서 붙은 이름이지만 지금은 보수공사로 고른 계단이에요 🪜',
+  'S19동 건물의 벽을 자세히 보면 신기하게도 나무가 자라고 있어요 🌿',
+  '전 마스코트 우람이는 99학번이고, 지금 마스코트 우왕이는 21학번이에요 🎓',
+  '중앙도서관 2관은 알쓸신잡으로 유명한 건축가 유현준 씨가 설계했어요 🏛️',
+  '간혹 학교 근처에서 약초를 수확하러 오시는 어르신들을 만날 수 있어요 🌿',
+  '우리 학교 부지 넓이는 무려 전국 30위나 된답니다 🏃‍♂️',
 ];
 
+let _lastFactIdx = -1;
 function getRandomFact() {
-  return chungFacts[Math.floor(Math.random() * chungFacts.length)];
+  let idx;
+  do { idx = Math.floor(Math.random() * chungFacts.length); } while (idx === _lastFactIdx && chungFacts.length > 1);
+  _lastFactIdx = idx;
+  return chungFacts[idx];
 }
 
 // ======== Typing indicator ========
@@ -371,6 +393,17 @@ function appendTypingIndicator() {
   const factEl = document.createElement('div');
   factEl.className = 'typing-fact';
   factEl.textContent = '💡 ' + getRandomFact();
+
+  const factInterval = setInterval(() => {
+    factEl.style.opacity = '0';
+    setTimeout(() => {
+      factEl.textContent = '💡 ' + getRandomFact();
+      factEl.style.opacity = '1';
+    }, 300);
+  }, 3000);
+
+  const originalRemove = group.remove.bind(group);
+  group.remove = () => { clearInterval(factInterval); originalRemove(); };
 
   bubble.appendChild(indicator);
   bubble.appendChild(factEl);
