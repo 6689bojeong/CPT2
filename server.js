@@ -134,6 +134,10 @@ app.post('/api/chat', async (req, res) => {
     return res.status(400).json({ error: '메시지를 입력해주세요.' });
   }
 
+  if (message.length > 1000) {
+    return res.json({ message: '질문이 너무 길어요! 1000자 이하로 입력해주세요. 😊', sources: [] });
+  }
+
   if (!conversationHistory.has(sessionId)) {
     conversationHistory.set(sessionId, []);
   }
