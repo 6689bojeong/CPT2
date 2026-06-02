@@ -203,6 +203,31 @@ app.post('/api/clear', (req, res) => {
   res.json({ success: true });
 });
 
+// 광고 신청 저장
+app.post('/api/ad-apply', async (req, res) => {
+  const { bizName, name, contact, email, adText, location, period, extra } = req.body;
+  if (!bizName || !name || !contact || !adText) {
+    return res.status(400).json({ error: '필수 항목을 모두 입력해주세요.' });
+  }
+  const { error } = await supabase
+    .from('ad_applications')
+    .insert({
+      biz_name: bizName.trim(),
+      name: name.trim(),
+      contact: contact.trim(),
+      email: email?.trim() || null,
+      ad_text: adText.trim(),
+      location: location?.trim() || null,
+      period: period || null,
+      extra: extra?.trim() || null,
+    });
+  if (error) {
+    console.error('광고 신청 저장 오류:', error);
+    return res.status(500).json({ error: '저장에 실패했습니다.' });
+  }
+  res.json({ success: true });
+});
+
 // 사용자 의견 저장
 app.post('/api/feedback', async (req, res) => {
   const { content, sessionId } = req.body;
@@ -222,7 +247,7 @@ app.post('/api/feedback', async (req, res) => {
 
 // 관리자 페이지
 app.get('/admin', async (req, res) => {
-  const { password } = req.query;
+  const { password, tab = 'feedback' } = req.query;
 
   if (password !== process.env.ADMIN_PASSWORD) {
     return res.send(`<!DOCTYPE html>
@@ -250,20 +275,30 @@ app.get('/admin', async (req, res) => {
 </html>`);
   }
 
-  const { data: feedbacks, error } = await supabase
-    .from('feedback')
-    .select('*')
-    .order('created_at', { ascending: false });
+  const [{ data: feedbacks }, { data: adApps }] = await Promise.all([
+    supabase.from('feedback').select('*').order('created_at', { ascending: false }),
+    supabase.from('ad_applications').select('*').order('created_at', { ascending: false }),
+  ]);
 
-  if (error) {
-    return res.status(500).send('데이터 불러오기 실패');
-  }
-
-  const rows = (feedbacks || []).map(f => `
+  const feedbackRows = (feedbacks || []).map(f => `
     <tr>
       <td>${f.id}</td>
       <td>${new Date(f.created_at).toLocaleString('ko-KR')}</td>
       <td style="white-space:pre-wrap">${f.content.replace(/</g, '&lt;')}</td>
+    </tr>`).join('');
+
+  const adRows = (adApps || []).map(a => `
+    <tr>
+      <td>${a.id}</td>
+      <td>${new Date(a.created_at).toLocaleString('ko-KR')}</td>
+      <td>${a.biz_name.replace(/</g, '&lt;')}</td>
+      <td>${a.name.replace(/</g, '&lt;')}</td>
+      <td>${a.contact.replace(/</g, '&lt;')}</td>
+      <td>${(a.email || '-').replace(/</g, '&lt;')}</td>
+      <td>${a.ad_text.replace(/</g, '&lt;')}</td>
+      <td>${(a.location || '-').replace(/</g, '&lt;')}</td>
+      <td>${(a.period || '-').replace(/</g, '&lt;')}</td>
+      <td style="white-space:pre-wrap">${(a.extra || '-').replace(/</g, '&lt;')}</td>
     </tr>`).join('');
 
   res.send(`<!DOCTYPE html>
@@ -274,22 +309,39 @@ app.get('/admin', async (req, res) => {
   <style>
     body { font-family: 'Pretendard', sans-serif; padding: 40px; background: #f0f4ff; }
     h2 { color: #1a56db; }
-    .count { color: #666; margin-bottom: 20px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; }
+    .tab-btn { padding: 10px 24px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .tab-btn.active { background: #1a56db; color: white; }
+    .tab-btn:not(.active) { background: white; color: #1a56db; border: 1px solid #1a56db; }
+    .count { color: #666; margin-bottom: 16px; }
     table { border-collapse: collapse; width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-    th { background: #1a56db; color: white; padding: 14px 16px; text-align: left; }
-    td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+    th { background: #1a56db; color: white; padding: 12px 14px; text-align: left; font-size: 13px; }
+    td { padding: 11px 14px; border-bottom: 1px solid #f0f0f0; vertical-align: top; font-size: 13px; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #f8f9ff; }
     .refresh { float: right; padding: 8px 16px; background: #1a56db; color: white; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; font-size: 14px; }
   </style>
 </head>
 <body>
-  <h2>📋 충피티 사용자 의견</h2>
-  <p class="count">총 ${(feedbacks || []).length}건 <a class="refresh" href="/admin?password=${password}">새로고침</a></p>
+  <h2>충피티 관리자</h2>
+  <div class="tabs">
+    <a class="tab-btn ${tab === 'feedback' ? 'active' : ''}" href="/admin?password=${password}&tab=feedback">📋 사용자 의견 (${(feedbacks || []).length})</a>
+    <a class="tab-btn ${tab === 'ad' ? 'active' : ''}" href="/admin?password=${password}&tab=ad">📢 광고 신청 (${(adApps || []).length})</a>
+  </div>
+
+  ${tab === 'feedback' ? `
+  <p class="count">총 ${(feedbacks || []).length}건 <a class="refresh" href="/admin?password=${password}&tab=feedback">새로고침</a></p>
   <table>
     <tr><th>#</th><th>날짜</th><th>의견</th></tr>
-    ${rows || '<tr><td colspan="3" style="text-align:center;color:#999;padding:40px">아직 의견이 없습니다</td></tr>'}
+    ${feedbackRows || '<tr><td colspan="3" style="text-align:center;color:#999;padding:40px">아직 의견이 없습니다</td></tr>'}
   </table>
+  ` : `
+  <p class="count">총 ${(adApps || []).length}건 <a class="refresh" href="/admin?password=${password}&tab=ad">새로고침</a></p>
+  <table>
+    <tr><th>#</th><th>신청일</th><th>업체명</th><th>담당자</th><th>연락처</th><th>이메일</th><th>광고문구</th><th>위치</th><th>기간</th><th>요청사항</th></tr>
+    ${adRows || '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px">아직 신청이 없습니다</td></tr>'}
+  </table>
+  `}
 </body>
 </html>`);
 });
