@@ -4,6 +4,8 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 const fs = require('fs');
+const cron = require('node-cron');
+const { crawlCafeteria, loadCafeteriaMenu } = require('./cafeteria_crawler');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -292,9 +294,44 @@ app.get('/admin', async (req, res) => {
 </html>`);
 });
 
+// ======== 학식 메뉴 API ========
+app.get('/api/cafeteria', (req, res) => {
+  const menu = loadCafeteriaMenu();
+  if (!menu) {
+    return res.status(503).json({ error: '학식 메뉴 데이터가 아직 없어요. 잠시 후 다시 시도해주세요.' });
+  }
+
+  // 오늘 요일 인덱스 (0=월 ~ 4=금, 주말은 -1)
+  const kstOffset = 9 * 60 * 60 * 1000;
+  const now = new Date(Date.now() + kstOffset);
+  const dayOfWeek = now.getUTCDay(); // 0=일, 1=월 ... 6=토
+  const dayIndex = dayOfWeek >= 1 && dayOfWeek <= 5 ? dayOfWeek - 1 : -1;
+
+  res.json({ menu, dayIndex, crawled_at: menu.crawled_at });
+});
+
+// 매주 월요일 오전 7시 자동 크롤링 (KST = UTC+9이므로 cron은 UTC 22시)
+cron.schedule('0 22 * * 0', async () => {
+  console.log('[학식크롤러] 주간 자동 크롤링 시작');
+  try {
+    await crawlCafeteria();
+  } catch (e) {
+    console.error('[학식크롤러] 자동 크롤링 실패:', e.message);
+  }
+});
+
 if (require.main === module) {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     console.log(`충피티 서버가 http://localhost:${PORT} 에서 실행 중입니다`);
+    // 시작 시 캐시 없으면 최초 크롤링
+    if (!loadCafeteriaMenu()) {
+      console.log('[학식크롤러] 초기 데이터 없음 - 최초 크롤링 시작');
+      try {
+        await crawlCafeteria();
+      } catch (e) {
+        console.error('[학식크롤러] 최초 크롤링 실패:', e.message);
+      }
+    }
   });
 }
 

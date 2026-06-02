@@ -1141,3 +1141,232 @@ html, body {
 .message-bubble li {
   margin: 3px 0;
 }
+
+/* ======== 학식 메뉴 ======== */
+.cafeteria-bubble {
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.cafe-title {
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cafe-restaurant {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+.cafe-restaurant:last-of-type {
+  border-bottom: none;
+}
+
+.cafe-rest-name {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--wine);
+}
+
+.cafe-meal-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin: 8px 0 4px;
+}
+
+.cafe-time {
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.cafe-closed {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.cafe-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.cafe-table th {
+  background: var(--wine-pale);
+  color: var(--wine-dark);
+  padding: 5px 8px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cafe-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #f5f5f5;
+  vertical-align: top;
+  line-height: 1.4;
+}
+
+.cafe-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cafe-footer {
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding: 8px 16px 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.cafe-footer a {
+  color: var(--wine);
+  text-decoration: none;
+}
+.cafe-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ======== 등록금 드롭다운 ======== */
+.tuition-bubble {
+  padding: 0 !important;
+  overflow: hidden;
+  min-width: 280px;
+  white-space: normal;
+  line-height: 1.65;
+}
+
+.tuition-title {
+  font-weight: 700;
+  padding: 10px 14px 2px;
+}
+
+.tuition-desc {
+  color: var(--text-secondary);
+  padding: 0 14px 8px;
+}
+
+.tuition-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0 14px 10px;
+}
+
+.tuition-select {
+  width: 100%;
+  padding: 6px 28px 6px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238B1A2B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  transition: border-color 0.15s;
+}
+
+.tuition-select:focus {
+  outline: none;
+  border-color: var(--wine);
+}
+
+.tuition-select:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tuition-result {
+  border-top: 1px solid var(--border-color);
+  padding: 8px 14px 6px;
+}
+
+.tuition-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.tuition-table th {
+  background: var(--wine-pale);
+  color: var(--wine-dark);
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tuition-table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.tuition-table td:last-child {
+  font-weight: 600;
+  color: var(--wine);
+}
+
+.tuition-table tr:last-child td {
+  border-bottom: none;
+}
+
+.tuition-note {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.tuition-info {
+  border-top: 1px solid var(--border-color);
+  padding: 8px 14px 4px;
+}
+
+.tuition-info-section {
+  margin-bottom: 6px;
+}
+
+.tuition-info-label {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.tuition-info li {
+  list-style: none;
+  padding-left: 8px;
+  margin: 0;
+}
+
+.tuition-info li::before {
+  content: '• ';
+  color: var(--wine);
+}
+
+.tuition-info .sub-li {
+  padding-left: 16px;
+  color: var(--text-secondary);
+}
+
+.tuition-info .sub-li::before {
+  content: '- ';
+  color: var(--text-secondary);
+}
+
+.tuition-info .notice {
+  color: var(--text-secondary);
+  padding-left: 8px;
+}
+
+.tuition-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 14px 10px;
+  border-top: 1px solid var(--border-color);
+}
