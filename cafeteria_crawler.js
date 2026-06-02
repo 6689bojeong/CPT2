@@ -1,10 +1,11 @@
+require('dotenv').config();
 const axios = require('axios');
 const cheerio = require('cheerio');
-const fs = require('fs');
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
+
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 const RESTAURANT_URL = 'https://www.cbnucoop.com/service/restaurant/';
-const OUTPUT_FILE = path.join(__dirname, 'cafeteria_menu.json');
 
 // 배열로 정의해야 숫자형 키 자동정렬 버그 없이 순서 보장됨
 const RESTAURANT_MAP = {
@@ -31,8 +32,6 @@ const RESTAURANT_MAP = {
   },
 };
 
-const DAY_NAMES = ['월', '화', '수', '목', '금'];
-
 async function crawlCafeteria() {
   const res = await axios.get(RESTAURANT_URL, {
     headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
@@ -41,24 +40,20 @@ async function crawlCafeteria() {
   });
 
   const html = Buffer.from(res.data).toString('utf-8');
-  // HTML 주석 제거 후 파싱 (메뉴 데이터가 주석 밖 #menu-result에 있음)
   const htmlClean = html.replace(/<!--[\s\S]*?-->/g, '');
   const $ = cheerio.load(htmlClean);
 
-  // 요일 날짜 추출 (탭 공통, 첫 번째 탭 기준)
   const days = [];
   $('#tab1 .weekday-title').each((i, el) => {
-    days.push($(el).text().trim()); // e.g. "06.02(화요일)"
+    days.push($(el).text().trim());
   });
 
-  // 결과 구조 초기화
   const result = {
     crawled_at: new Date().toISOString(),
-    days,                    // ["06.02(화요일)", ...]
+    days,
     restaurants: {},
   };
 
-  // id -> mealInfo 역방향 맵 (크롤링 시 빠른 조회용)
   const mealById = {};
   for (const restInfo of Object.values(RESTAURANT_MAP)) {
     result.restaurants[restInfo.name] = {};
@@ -74,7 +69,6 @@ async function crawlCafeteria() {
     }
   }
 
-  // #menu-result 내 .menu 파싱
   $('#menu-result .menu').each((_, el) => {
     const dataTable = $(el).attr('data-table');
     if (!dataTable) return;
@@ -94,7 +88,6 @@ async function crawlCafeteria() {
     $(el).find('.menu-body').each((_, menuBody) => {
       const name = $(menuBody).find('.card-header').text().trim();
       if (!name) return;
-      // 미운영/휴무 항목은 건너뜀 → days[dayIdx]가 빈 배열로 남아 미운영 표시
       if (name.includes('미운영') || name.includes('휴무') || name.includes('판매중단')) return;
 
       const sides = [];
@@ -103,7 +96,6 @@ async function crawlCafeteria() {
         if (text) sides.push(text);
       });
 
-      // 가격: ￦9000 형태
       const bodyText = $(menuBody).find('.card-body').text();
       const priceMatches = [...bodyText.matchAll(/[￥￦]\s*([\d,]+)/g)];
       const price = priceMatches.length > 0 ? `${priceMatches[0][1]}원` : '';
@@ -115,17 +107,30 @@ async function crawlCafeteria() {
     result.restaurants[restName][mealName].days[dayIdx] = items;
   });
 
-  fs.writeFileSync(OUTPUT_FILE, JSON.stringify(result, null, 2), 'utf-8');
+  const { error } = await supabase
+    .from('cafeteria_cache')
+    .upsert({ id: 1, data: result, crawled_at: result.crawled_at });
+
+  if (error) throw new Error('Supabase 저장 실패: ' + error.message);
+
   console.log(`[학식크롤러] 완료 - ${days[0] || '?'} 주간 메뉴 저장`);
   return result;
 }
 
-function loadCafeteriaMenu() {
-  try {
-    return JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf-8'));
-  } catch {
-    return null;
-  }
+async function loadCafeteriaMenu() {
+  const { data, error } = await supabase
+    .from('cafeteria_cache')
+    .select('data, crawled_at')
+    .eq('id', 1)
+    .single();
+
+  if (error || !data) return null;
+  return data.data;
 }
 
-module.exports = { crawlCafeteria, loadCafeteriaMenu };
+function isStale(crawledAt) {
+  const SIX_DAYS_MS = 6 * 24 * 60 * 60 * 1000;
+  return Date.now() - new Date(crawledAt).getTime() > SIX_DAYS_MS;
+}
+
+module.exports = { crawlCafeteria, loadCafeteriaMenu, isStale };
