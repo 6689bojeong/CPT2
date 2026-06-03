@@ -282,14 +282,14 @@ app.get('/admin', async (req, res) => {
   const feedbackRows = (feedbacks || []).map(f => `
     <tr>
       <td>${f.id}</td>
-      <td>${new Date(f.created_at).toLocaleString('ko-KR')}</td>
+      <td>${new Date(f.created_at).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</td>
       <td style="white-space:pre-wrap">${f.content.replace(/</g, '&lt;')}</td>
     </tr>`).join('');
 
   const adRows = (adApps || []).map(a => `
     <tr>
       <td>${a.id}</td>
-      <td>${new Date(a.created_at).toLocaleString('ko-KR')}</td>
+      <td>${new Date(a.created_at).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}</td>
       <td>${a.biz_name.replace(/</g, '&lt;')}</td>
       <td>${a.name.replace(/</g, '&lt;')}</td>
       <td>${a.contact.replace(/</g, '&lt;')}</td>
